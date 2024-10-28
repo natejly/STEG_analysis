@@ -1,0 +1,8 @@
+"Name"	"GEO_Fascinating_PRE"	"GEO_Exciting_PRE"	"GEO_Interesting_PRE"	"GEO_Important_PRE"	"GEO_Fascinating_POST"	"GEO_Exciting_POST"	"GEO_Interesting_POST"	"GEO_Important_POST"
+"38"	"3"	"3"	"5"	"4"	"3"	"3"	"3"	"4"
+"39"	"5"	"5"	"5"	"5"	"4"	"5"	"5"	"5"
+"40"	"5"	"5"	"5"	"5"	"5"	"5"	"5"	"5"
+"41"	"1"	"1"	"1"	"1"	"5"	"5"	"5"	"5"
+"42"	"5"	"4"	"3"	"1"	"5"	"4"	"3"	"2"
+"45"	"5"	"5"	"5"	"5"	"5"	"5"	"5"	"5"
+"46"	"5"	"4"	"5"	"4"	"5"	"5"	"4"	"2"

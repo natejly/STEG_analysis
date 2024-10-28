@@ -1,0 +1,5 @@
+"Question"	"Pre-Survey"	"Post-Survey"
+"STE_Fascinating_PRE"	4.28571428571429	3.9
+"STE_Exciting_PRE"	3.5	4.27272727272727
+"STE_Interesting_PRE"	4.11111111111111	3.8
+"STE_Important_PRE"	4.28571428571429	3.81818181818182

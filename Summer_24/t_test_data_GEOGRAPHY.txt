@@ -1,0 +1,8 @@
+"Name"	"GEOGRAPHY_Fascinating_PRE"	"GEOGRAPHY_Exciting_PRE"	"GEOGRAPHY_Interesting_PRE"	"GEOGRAPHY_Important_PRE"	"GEOGRAPHY_Fascinating_POST"	"GEOGRAPHY_Exciting_POST"	"GEOGRAPHY_Interesting_POST"	"GEOGRAPHY_Important_POST"
+"37"	"4"	"4"	"4"	"4"	"3"	"3"	"3"	"3"
+"38"	"5"	"3"	"4"	"5"	"5"	"4"	"3"	"5"
+"39"	"3"	"3"	"3"	"3"	"5"	"5"	"5"	"5"
+"40"	"5"	"5"	"5"	"5"	"5"	"5"	"5"	"5"
+"41"	"3"	"1"	"1"	"5"	"1"	"2"	"3"	"5"
+"42"	"4"	"3"	"5"	"5"	"5"	"4"	"4"	"2"
+"45"	"5"	"5"	"5"	"5"	"5"	"5"	"5"	"5"

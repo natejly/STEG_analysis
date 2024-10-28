@@ -1,0 +1,5 @@
+"Question"	"Pre-Survey"	"Post-Survey"
+"TECHNOLOGY_Fascinating_PRE"	4.75	4.66666666666667
+"TECHNOLOGY_Exciting_PRE"	4.5	4.54545454545455
+"TECHNOLOGY_Interesting_PRE"	4.375	4.6
+"TECHNOLOGY_Important_PRE"	4.5	4.5

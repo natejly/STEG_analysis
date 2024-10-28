@@ -1,0 +1,8 @@
+"Name"	"TECHNOLOGY_Fascinating_PRE"	"TECHNOLOGY_Exciting_PRE"	"TECHNOLOGY_Interesting_PRE"	"TECHNOLOGY_Important_PRE"	"TECHNOLOGY_Fascinating_POST"	"TECHNOLOGY_Exciting_POST"	"TECHNOLOGY_Interesting_POST"	"TECHNOLOGY_Important_POST"
+"37"	"5"	"5"	"5"	"5"	"4"	"4"	"4"	"4"
+"38"	"5"	"4"	"5"	"5"	"4"	"4"	"5"	"5"
+"39"	"5"	"5"	"5"	"5"	"5"	"5"	"5"	"5"
+"40"	"5"	"5"	"5"	"5"	"5"	"5"	"5"	"5"
+"41"	"5"	"5"	"5"	"4"	"5"	"5"	"5"	"5"
+"42"	"5"	"4"	"3"	"2"	"4"	"3"	"5"	"2"
+"45"	"5"	"5"	"5"	"5"	"5"	"5"	"5"	"5"

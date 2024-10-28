@@ -1,0 +1,218 @@
+---
+title: "STEG SURVEY ANALYSIS"
+output: html_document
+---
+
+```{r}
+# Read in the data
+data <- read.csv("Fall_23.csv")
+
+# Clean up the column names
+colnames(data) <- gsub(pattern = ".*(Pre|Post).*", replacement = "PrePost", x = colnames(data))
+colnames(data) <- gsub(pattern = ".*(Name).*", replacement = "Name", x = colnames(data))
+colnames(data) <- gsub(pattern = "To.me..", replacement = "", x = colnames(data))
+colnames(data) <- gsub(pattern = ".is....", replacement = "_", x = colnames(data))
+colnames(data) <- gsub(pattern = "a.CAREER.in.science..technology..and.engineering",
+                       replacement = "STE", x = colnames(data))
+colnames(data) <- gsub(pattern = "a.CAREER.in.geography", replacement = "GEO",
+                       x = colnames(data))
+
+# Separate the data into pre and post
+pre_data <- data[data$PrePost == "PRE", ]
+post_data <- data[data$PrePost == "POST", ]
+
+# Remove the first column
+pre_data <- pre_data[, -1]
+post_data <- post_data[, -1]
+
+# Append _PRE and _POST to column names
+colnames(pre_data)[-1] <- paste0(colnames(pre_data)[-1], "_PRE")
+colnames(post_data)[-1] <- paste0(colnames(post_data)[-1], "_POST")
+
+# Get the mean for each column and collect it in a data frame
+mean_data <- data.frame(
+  Question = colnames(pre_data),
+  Mean_PRE = sapply(pre_data, function(x) mean(as.numeric(x), na.rm = TRUE))
+)
+mean_data$Mean_POST <- sapply(post_data, function(x) mean(as.numeric(x), na.rm = TRUE))
+
+# Remove the 'Name' row
+mean_data <- mean_data[-1, ]
+
+# Show means
+print(mean_data[, -1])
+
+# Load necessary libraries
+library(ggplot2)
+library(tidyr)
+library(stringr)
+
+# Define the function to generate plots
+plot_figures <- function(data, grep_string, title = NULL) {
+  # Filter data based on the grep_string
+  subset <- data[grepl(grep_string, data$Question), ]
+  colnames(subset) <- c("Question", "Pre-Survey", "Post-Survey")
+
+  # Convert data to long format
+  subset_long <- pivot_longer(subset, 
+                              cols = c("Pre-Survey", "Post-Survey"), 
+                              names_to = "Type", 
+                              values_to = "Mean")
+
+  # Create a mapping for the original questions to the new labels
+  label_mapping <- c("Fascinating", "Exciting", "Interesting", "Important")
+  names(label_mapping) <- unique(subset_long$Question)
+
+  # Ensure the bars appear in the order of label_mapping
+  subset_long$Question <- factor(subset_long$Question, levels = names(label_mapping))
+
+  # Ensure Pre-Survey appears to the left of Post-Survey
+  subset_long$Type <- factor(subset_long$Type, levels = c("Pre-Survey", "Post-Survey"))
+
+  # Create a title
+  if (is.null(title)){
+    title <- paste("To Me", str_to_title(grep_string), "is:")
+  }
+  ggplot(subset_long, aes(x = Question, y = Mean, fill = Type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(title = title, x = "", y = "Average score") +
+    scale_fill_manual(values = c("Pre-Survey" = "#2050f0", "Post-Survey" = "#fbaf17")) +
+    scale_x_discrete(labels = label_mapping) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 18),  # Center the title
+      panel.grid.major = element_blank(),                # Remove major grid lines
+      panel.grid.minor = element_blank(),                # Remove minor grid lines
+      legend.title = element_blank(),                    # Remove legend title
+      plot.margin = margin(20, 0, 20, 10),
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      axis.title.x = element_text(size = 12),            # Increase x-axis label size
+      axis.title.y = element_text(size = 12)
+    ) + 
+    geom_text(aes(label = round(Mean, 3)),               # Add text labels with rounded mean values
+              position = position_dodge(width = 0.9), vjust = -0.5, size = 3.5)
+}
+
+# Generate plots
+plot_figures(mean_data, "SCIENCE")
+plot_figures(mean_data, "TECHNOLOGY")
+plot_figures(mean_data, "ENGINEERING")
+plot_figures(mean_data, "GEOGRAPHY")
+plot_figures(mean_data, "STE", "To Me a Career in STE is:")
+plot_figures(mean_data, "GEO_", "To Me a Career in Geography is:")
+
+# Create the subject_data data frame
+subject_data <- data.frame(
+  Subject = c("Science", "Technology", "Engineering", "Geography", "Career in STE", "Career in GEO"),
+  `Pre-Survey` = numeric(6),
+  `Post-Survey` = numeric(6)
+)
+
+# Calculate means for each subject
+subjects_map <- list(
+  "Science" = "SCIENCE",
+  "Technology" = "TECHNOLOGY",
+  "Engineering" = "ENGINEERING",
+  "Geography" = "GEOGRAPHY",
+  "Career in STE" = "STE",
+  "Career in GEO" = "GEO_"
+)
+
+for (i in 1:nrow(subject_data)) {
+  subject_name <- subject_data$Subject[i]
+  grep_string <- subjects_map[[subject_name]]
+  subject_data[i, "Pre-Survey"] <- mean(mean_data[grepl(grep_string, mean_data$Question), "Mean_PRE"])
+  subject_data[i, "Post-Survey"] <- mean(mean_data[grepl(grep_string, mean_data$Question), "Mean_POST"])
+}
+
+# Reshape data into long format
+subject_data_long <- pivot_longer(subject_data, cols = c("Pre-Survey", "Post-Survey"),
+                                  names_to = "Survey_Type", values_to = "Mean_Score")
+
+# Ensure the order of subjects on the x-axis
+subject_data_long$Subject <- factor(subject_data_long$Subject, levels = subject_data$Subject)
+
+# Create the double bar graph
+ggplot(subject_data_long, aes(x = Subject, y = Mean_Score, fill = Survey_Type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Pre-Survey vs Post-Survey Mean Scores by Subject",
+       x = "Subject",
+       y = "Average Score") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 18),  # Center the title
+    panel.grid.major = element_blank(),                # Remove major grid lines
+    panel.grid.minor = element_blank(),                # Remove minor grid lines
+    legend.title = element_blank(),                    # Remove legend title
+    plot.margin = margin(20, 0, 20, 10),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.title.x = element_text(size = 12),            # Increase x-axis label size
+    axis.title.y = element_text(size = 12)
+  )
+
+# Define the updated paired_t function
+paired_t <- function(pre_data, post_data, subject) {
+  # Extract the pre-test and post-test columns matching the subject
+  pre_cols <- grep(subject, colnames(pre_data), value = TRUE)
+  post_cols <- grep(subject, colnames(post_data), value = TRUE)
+  
+  # Ensure the same number of columns are found for both pre and post data
+  if (length(pre_cols) != length(post_cols)) {
+    warning("Mismatch in the number of columns found for pre and post data for subject: ", subject)
+    return(NA)
+  }
+  
+  # Combine pre_data and post_data on 'Name'
+  combined_data <- merge(pre_data[, c("Name", pre_cols)], post_data[, c("Name", post_cols)], by = "Name")
+  
+  # Identify rows where all pre and post data for the subject are complete (non-NA and non-empty)
+  valid_rows <- apply(combined_data[, -1], 1, function(row) all(!is.na(row) & row != ""))
+  complete_data <- combined_data[valid_rows, ]
+  
+  # Check if there are enough data points to perform t-test
+  if (nrow(complete_data) < 2) {
+    warning("Not enough complete data to perform t-test for subject: ", subject)
+    return(NA)
+  }
+  
+  # Print the students that have complete data for this subject
+  cat("Students with complete data for", subject, ":\n")
+  print(complete_data$Name)
+  
+  # Flatten the pre and post data into vectors
+  pre <- as.numeric(unlist(complete_data[, pre_cols]))
+  post <- as.numeric(unlist(complete_data[, post_cols]))
+  
+  # Perform the paired t-test
+  t_result <- t.test(pre, post, paired = TRUE)
+  
+  return(t_result$p.value)
+}
+
+# List of subjects
+subjects <- c("SCIENCE", "TECHNOLOGY", "ENGINEERING", "GEOGRAPHY", "STE", "GEO_")
+
+# Initialize a data frame to store p-values
+t_test_results <- data.frame(Subject = character(), P_Value = numeric(), stringsAsFactors = FALSE)
+
+for (subject in subjects) {
+  cat("\nPerforming t-test for subject:", subject, "\n")
+  
+  p_value <- tryCatch({
+    paired_t(pre_data, post_data, subject)
+  }, warning = function(w) {
+    cat("Warning:", conditionMessage(w), "\n")
+    NA
+  }, error = function(e) {
+    cat("Error:", conditionMessage(e), "\n")
+    NA
+  })
+  
+  t_test_results <- rbind(t_test_results, data.frame(Subject = subject, P_Value = p_value))
+}
+
+# Rename STE to Career in STE, GEO_ to Career in GEO
+t_test_results$Subject[t_test_results$Subject == "STE"] <- "Career in STE"
+t_test_results$Subject[t_test_results$Subject == "GEO_"] <- "Career in GEO"
+
+# Display the t-test results
+print(t_test_results)
+```

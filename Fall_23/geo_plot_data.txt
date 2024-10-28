@@ -1,0 +1,5 @@
+"Question"	"Pre-Survey"	"Post-Survey"
+"GEO_Fascinating_PRE"	3.625	3.4
+"GEO_Exciting_PRE"	3.35294117647059	3.57142857142857
+"GEO_Interesting_PRE"	3.6875	3.28571428571429
+"GEO_Important_PRE"	4.125	3.57142857142857
